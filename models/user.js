@@ -52,6 +52,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: 1,
   },
+  usersForAnswer: {
+    type: [{
+      id: Number,
+      helped: Boolean,
+    }],
+    default: 0,
+    require: true,
+  },
 });
 
 module.exports = mongoose.model('user', userSchema);

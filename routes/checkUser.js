@@ -1,9 +1,14 @@
 const User = require('../models/user');
-const { getCurrentDay, updateUserDay } = require('../functions/utils');
+const {
+  getCurrentDay,
+  updateUserDay,
+  checkRefAndUpdate,
+  checkEventTime,
+} = require('../functions/utils');
 
 module.exports = app => {
   app.post('/checkUser', async (req, res) => {
-    const { vkId } = req.body;
+    const { vkId, ref } = req.body;
     const result = {
       tutorial: false,
       keys: 0,
@@ -12,9 +17,8 @@ module.exports = app => {
     };
 
     const user = await User.findOne({ vkId }).then(data => data);
-    const currentTime = Math.round(new Date().getTime() / 1000);
     const currentDay = getCurrentDay();
-    if (currentTime > process.env.END_DAY || currentTime < process.env.START_DAY) res.json({});
+    if (!checkEventTime()) res.json({});
 
     if (user) {
       result.tutorial = user.tutorial;
@@ -25,6 +29,7 @@ module.exports = app => {
       }
     } else {
       User.create({ vkId: vkId }).then(() => null);
+      checkRefAndUpdate(ref);
     }
 
     res.json(result);
