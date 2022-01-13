@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { MAX_ACTIONS_COUNT, INC_INVITE } = require('../data/constants');
 const User = require('../models/user');
 
 const randomInt = (min, max) => Math.round(Math.random() * (max - min) + min);
@@ -24,8 +25,6 @@ const updateUserDay = (vkId, currentDay) => {
 };
 
 const checkRefAndUpdate = vkId => {
-  const MAX_INVITE_COUNT = 3;
-  const INC_ARTEFACTS = 2;
   const user = User.findOne({ vkId }).then(found => found);
   if (user) {
     const currentDay = getCurrentDay();
@@ -34,10 +33,10 @@ const checkRefAndUpdate = vkId => {
       user.inviteCount = 0;
     }
 
-    if (user.inviteCount < MAX_INVITE_COUNT) {
+    if (user.inviteCount < MAX_ACTIONS_COUNT) {
       User.updateOne(
         { vkId },
-        { $inc: { inviteCount: 1, artefacts: INC_ARTEFACTS } },
+        { $inc: { inviteCount: 1, artefacts: INC_INVITE } },
       ).then(() => null);
     }
   }

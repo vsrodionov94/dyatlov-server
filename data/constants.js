@@ -1,0 +1,11 @@
+const INC_HELPED = 5;
+const INC_INTERFERE = 10;
+const MAX_ACTIONS_COUNT = 3;
+const INC_INVITE = 2;
+
+module.exports = {
+  INC_HELPED,
+  INC_INTERFERE,
+  MAX_ACTIONS_COUNT,
+  INC_INVITE,
+};
