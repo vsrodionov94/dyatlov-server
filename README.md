@@ -1,2 +1,2 @@
-# parimatch-server
-Server side parimatch VK Mini Apps
+# dyatlov-server
+Server side TB3 "Перевал Дятлова" VK Mini Apps
