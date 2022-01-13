@@ -57,7 +57,7 @@ const getUserInfo = id => {
   return axios.get(`https://api.vk.com/method/${method}`, {
     params: {
       v: version,
-      access_token: process.env.VK_ACCESS_TOKEN,
+      access_token: process.env.VK_GROUP_KEY,
       user_ids: userIds,
       fields: fields,
       name_case: nameCase,
@@ -75,7 +75,7 @@ const parseUserData = data => {
     bdate,
   } = data;
   const hasAge = bdate && bdate.split('.')[2];
-  const calculatedAge = hasAge ? new Date().getFullYear - Number(bdate.split('.')[2]) : '-';
+  const calculatedAge = hasAge ? new Date().getFullYear() - Number(bdate.split('.')[2]) : '-';
   return {
     id: id,
     name: `${firstName} ${lastName}`,
