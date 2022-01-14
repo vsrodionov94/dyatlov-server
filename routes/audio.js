@@ -3,7 +3,7 @@ const User = require('../models/user');
 const audio = require('../data/audio');
 const Statistics = require('../classes/Statistics');
 
-const INC_ARTIFACTS = 5;
+const { INC_AUDIO, MAX_ACTIONS_COUNT } = require('../data/constants');
 
 const checkAudio = app => {
   app.post('/checkAudio', async (req, res) => {
@@ -53,15 +53,15 @@ const tryAnswerAudio = app => {
       const dailyAudio = audio[currentDay];
 
       if (dailyAudio) {
-        if (result.tryCount >= 0 && result.tryCount < 3) {
+        if (result.tryCount >= 0 && result.tryCount < MAX_ACTIONS_COUNT) {
           if (dailyAudio === answer.toUpperCase()) {
             result.tryCount = -1;
             result.correctly = true;
-            result.artifacts += INC_ARTIFACTS;
+            result.artifacts += INC_AUDIO;
             Statistics.incAudioCount();
             User.updateOne(
               { vkId },
-              { $inc: { artifacts: INC_ARTIFACTS }, $set: { tryAudioCount: -1 } },
+              { $inc: { artifacts: INC_AUDIO }, $set: { tryAudioCount: -1 } },
             ).then(() => null);
           } else {
             result.tryCount += 1;

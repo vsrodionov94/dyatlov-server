@@ -9,10 +9,7 @@ const {
 } = require('../functions/utils');
 const User = require('../models/user');
 
-const {
-  INC_HELPED,
-  INC_INTERFERE,
-} = require('../data/constants');
+const { INC_HELPED, INC_INTERFERE } = require('../data/constants');
 
 const getUserForAnswer = app => {
   app.post('/getUserForAnswer', async (req, res) => {

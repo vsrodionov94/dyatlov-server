@@ -2,6 +2,7 @@ const { getCurrentDay, updateUserDay } = require('../functions/utils');
 const User = require('../models/user');
 const keys = require('../data/keys');
 const Statistics = require('../classes/Statistics');
+const { MAX_ACTIONS_COUNT } = require('../data/constants');
 
 const checkKey = app => {
   app.post('/checkKey', async (req, res) => {
@@ -51,7 +52,7 @@ const tryAnswerKey = app => {
       const dailyKey = keys[currentDay];
 
       if (dailyKey) {
-        if (result.tryCount >= 0 && result.tryCount < 3) {
+        if (result.tryCount >= 0 && result.tryCount < MAX_ACTIONS_COUNT) {
           if (dailyKey === answer) {
             result.tryCount = -1;
             result.correctly = true;
