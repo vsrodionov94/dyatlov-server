@@ -49,7 +49,7 @@ const tryAnswerUser = app => {
       artifacts: 0,
     };
 
-    const { vkId, foreignId, answer } = req.body;
+    const { vkId, foreignId, helped } = req.body;
 
     const user = await User.findOne({ vkId }).then(found => found);
 
@@ -63,11 +63,11 @@ const tryAnswerUser = app => {
       if (foreignUser) {
         if (foreignUser.helped) {
           incUserArtefacts(foreignUser.id, INC_HELPED);
-          if (answer) {
+          if (helped) {
             incUserArtefactsAndTryCount(vkId, INC_HELPED);
             result.artifacts += INC_HELPED;
           }
-        } else if (answer) {
+        } else if (helped) {
           incUserArtefacts(foreignUser.id, INC_INTERFERE);
           incUserArtefactsAndTryCount(vkId, -INC_HELPED);
           result.artifacts -= INC_HELPED;
@@ -77,6 +77,8 @@ const tryAnswerUser = app => {
           result.artifacts += INC_INTERFERE;
         }
         result.tryCount += 1;
+        const newUsers = usersForAnswer.filter(el => el._id !== foreignUser._id);
+        User.updateOne({ vkId }, { $set: { usersForAnswer: newUsers } }).then(() => null);
       } else result.error = true;
     } else result.error = true;
 
