@@ -52,7 +52,7 @@ const tryAnswerUser = app => {
       artifacts: 0,
     };
 
-    const { vkId, userId, answer } = req.body;
+    const { vkId, foreignId, answer } = req.body;
 
     const user = await User.findOne({ vkId }).then(found => found);
 
@@ -62,7 +62,7 @@ const tryAnswerUser = app => {
       else result.tryCount = user.tryUserAnswerCount;
       result.artifacts = user.artifacts;
       const { usersForAnswer } = user;
-      const foreignUser = usersForAnswer.find(el => el.id === Number(userId));
+      const foreignUser = usersForAnswer.find(el => el.id === Number(foreignId));
       if (foreignUser) {
         if (foreignUser.helped) {
           incUserArtefacts(foreignUser.id, INC_HELPED);

@@ -32,7 +32,7 @@ const getRandomUser = app => {
       if (foreignUser) {
         const userData = await getUserInfo(foreignUser.vkId)
           .then(response => {
-            if (response.data) {
+            if (response.data.response) {
               return parseUserData(response.data.response[0]);
             }
             return null;
@@ -45,4 +45,33 @@ const getRandomUser = app => {
   });
 };
 
-module.exports = { getRandomUser };
+const trySendUser = app => {
+  app.post('/trySendUser', async (req, res) => {
+    const { vkId, foreignId, helped } = req.body;
+    const result = {
+      error: false,
+      tryCount: 0,
+    };
+
+    const user = await User.findOne({ vkId }).then(found => found);
+    if (user) {
+      const currentDay = getCurrentDay();
+      if (currentDay !== user.lastDay) updateUserDay(vkId, currentDay);
+      else result.tryCount = user.tryUserSendCount;
+
+      const foreignUser = await User.findOne({ vkId: foreignId }).then(found => found);
+      if (foreignUser) {
+        const newUsers = foreignUser.usersForAnswer.concat({ id: vkId, helped: helped });
+        User.updateOne({ vkId: foreignId }, { $set: { usersForAnswer: newUsers } })
+          .then(() => null);
+
+        User.updateOne({ vkId }, { $inc: { tryUserSendCount: 1 } }).then(() => null);
+        result.tryCount += 1;
+      } else result.error = true;
+    } else result.error = true;
+
+    res.json(result);
+  });
+};
+
+module.exports = { getRandomUser, trySendUser };

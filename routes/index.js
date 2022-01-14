@@ -3,7 +3,8 @@ const getStats = require('./getStats');
 const { checkAudio, tryAnswerAudio } = require('./audio');
 const { checkKey, tryAnswerKey } = require('./keys');
 const { getUserForAnswer, tryAnswerUser } = require('./answerUser');
-const { getRandomUser } = require('./sendUser');
+const { getRandomUser, trySendUser } = require('./sendUser');
+const doneTutorial = require('./doneTutorial');
 
 module.exports = app => {
   checkUser(app);
@@ -15,4 +16,6 @@ module.exports = app => {
   getUserForAnswer(app);
   tryAnswerUser(app);
   getRandomUser(app);
+  trySendUser(app);
+  doneTutorial(app);
 };

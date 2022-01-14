@@ -5,6 +5,7 @@ const {
   checkRefAndUpdate,
   checkEventTime,
 } = require('../functions/utils');
+const Statistics = require('../classes/Statistics');
 
 module.exports = app => {
   app.post('/checkUser', async (req, res) => {
@@ -30,8 +31,10 @@ module.exports = app => {
     } else {
       User.create({ vkId: vkId }).then(() => null);
       checkRefAndUpdate(ref);
+      Statistics.incUsersCount();
     }
 
+    Statistics.incOpenedCount();
     res.json(result);
   });
 };

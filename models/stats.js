@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const defaultDays = require('../data/defaultDays');
 
 const statsSchema = new mongoose.Schema({
   usersCount: {
@@ -11,10 +12,12 @@ const statsSchema = new mongoose.Schema({
     index: true,
     default: 0,
   },
-  repostsCount: {
-    type: Number,
-    index: true,
-    default: 0,
+  days: {
+    type: [{
+      keys: Number,
+      audio: Number,
+    }],
+    default: defaultDays,
   },
 });
 

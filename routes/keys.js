@@ -1,6 +1,7 @@
 const { getCurrentDay, updateUserDay } = require('../functions/utils');
 const User = require('../models/user');
 const keys = require('../data/keys');
+const Statistics = require('../classes/Statistics');
 
 const checkKey = app => {
   app.post('/checkKey', async (req, res) => {
@@ -8,7 +9,7 @@ const checkKey = app => {
       error: false,
       hasKey: false,
       tryCount: 0,
-      currentDay: 1,
+      currentDay: 0,
     };
 
     const { vkId } = req.body;
@@ -57,6 +58,7 @@ const tryAnswerKey = app => {
             result.keys += 1;
             User.updateOne({ vkId }, { $inc: { keys: 1 }, $set: { tryKeyCount: -1 } })
               .then(() => null);
+            Statistics.incKeysCount();
           } else {
             result.tryCount += 1;
             User.updateOne({ vkId }, { $inc: { tryKeyCount: 1 } }).then(() => null);

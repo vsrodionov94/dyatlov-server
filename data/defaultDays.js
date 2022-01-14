@@ -1,0 +1,16 @@
+module.exports = [
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+  { keys: 0, audio: 0 },
+];

@@ -1,6 +1,7 @@
 const { getCurrentDay, updateUserDay } = require('../functions/utils');
 const User = require('../models/user');
 const audio = require('../data/audio');
+const Statistics = require('../classes/Statistics');
 
 const INC_ARTIFACTS = 5;
 
@@ -53,10 +54,11 @@ const tryAnswerAudio = app => {
 
       if (dailyAudio) {
         if (result.tryCount >= 0 && result.tryCount < 3) {
-          if (dailyAudio === answer) {
+          if (dailyAudio === answer.toUpperCase()) {
             result.tryCount = -1;
             result.correctly = true;
             result.artifacts += INC_ARTIFACTS;
+            Statistics.incAudioCount();
             User.updateOne(
               { vkId },
               { $inc: { artifacts: INC_ARTIFACTS }, $set: { tryAudioCount: -1 } },
