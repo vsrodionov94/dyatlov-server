@@ -1,3 +1,4 @@
+const { MAX_ACTIONS_COUNT } = require('../data/constants');
 const {
   getCurrentDay,
   updateUserDay,
@@ -28,17 +29,19 @@ const getRandomUser = app => {
       if (currentDay !== user.lastDay) updateUserDay(vkId, currentDay);
       else result.tryCount = user.tryUserSendCount;
 
-      const foreignUser = await getForeignUser();
-      if (foreignUser) {
-        const userData = await getUserInfo(foreignUser.vkId)
-          .then(response => {
-            if (response.data.response) {
-              return parseUserData(response.data.response[0]);
-            }
-            return null;
-          });
-        result.user = userData;
-      } else result.error = true;
+      if (result.tryCount < MAX_ACTIONS_COUNT) {
+        const foreignUser = await getForeignUser();
+        if (foreignUser) {
+          const userData = await getUserInfo(foreignUser.vkId)
+            .then(response => {
+              if (response.data.response) {
+                return parseUserData(response.data.response[0]);
+              }
+              return null;
+            });
+          result.user = userData;
+        } else result.error = true;
+      } else result.user = null;
     } else result.error = true;
 
     res.json(result);
@@ -58,7 +61,6 @@ const trySendUser = app => {
       const currentDay = getCurrentDay();
       if (currentDay !== user.lastDay) updateUserDay(vkId, currentDay);
       else result.tryCount = user.tryUserSendCount;
-
       const foreignUser = await User.findOne({ vkId: foreignId }).then(found => found);
       if (foreignUser) {
         const newUsers = foreignUser.usersForAnswer.concat({ id: vkId, helped: helped });

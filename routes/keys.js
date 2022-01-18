@@ -62,7 +62,8 @@ const tryAnswerKey = app => {
             Statistics.incKeysCount();
           } else {
             result.tryCount += 1;
-            User.updateOne({ vkId }, { $inc: { tryKeyCount: 1 } }).then(() => null);
+            User.updateOne({ vkId }, { $inc: { tryKeyCount: 1 } })
+              .then(() => null);
           }
         }
       }
