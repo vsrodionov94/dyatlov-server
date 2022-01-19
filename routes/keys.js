@@ -1,6 +1,7 @@
 const { getCurrentDay, updateUserDay } = require('../functions/utils');
 const User = require('../models/user');
 const keys = require('../data/keys');
+const twitchKeys = require('../data/twitchKeys');
 const Statistics = require('../classes/Statistics');
 const { MAX_ACTIONS_COUNT } = require('../data/constants');
 
@@ -23,7 +24,9 @@ const checkKey = app => {
       if (currentDay !== user.lastDay) updateUserDay(vkId, currentDay);
       else result.tryCount = user.tryKeyCount;
 
-      result.hasKey = Boolean(keys[currentDay]);
+      result.hasKey = Boolean(keys[currentDay]) && !user.tvKeyAnswered;
+      result.hasKey = result.hasKey || user.answerTwitch.length < twitchKeys.length;
+
       result.currentDay = currentDay;
     } else result.error = true;
 
@@ -50,20 +53,25 @@ const tryAnswerKey = app => {
       if (currentDay !== user.lastDay) updateUserDay(vkId, currentDay);
       else result.tryCount = user.tryKeyCount;
       const dailyKey = keys[currentDay];
-
-      if (dailyKey) {
-        if (result.tryCount >= 0 && result.tryCount < MAX_ACTIONS_COUNT) {
-          if (dailyKey === answer) {
-            result.tryCount = -1;
-            result.correctly = true;
-            result.keys += 1;
-            User.updateOne({ vkId }, { $inc: { keys: 1 }, $set: { tryKeyCount: -1 } })
-              .then(() => null);
-            Statistics.incKeysCount();
-          } else {
-            result.tryCount += 1;
-            User.updateOne({ vkId }, { $inc: { tryKeyCount: 1 } }).then(() => null);
-          }
+      const checkTwitchKey = user.answerTwitch.some(el => el === answer);
+      if (result.tryCount < MAX_ACTIONS_COUNT) {
+        if (!user.tvKeyAnswered && dailyKey === answer) {
+          result.tryCount += 1;
+          result.correctly = true;
+          result.keys += 1;
+          User.updateOne(
+            { vkId },
+            { $inc: { keys: 1, tryKeyCount: 1 }, $set: { tvKeyAnswered: true } },
+          ).then(() => null);
+          Statistics.incKeysCount();
+        } else if (!checkTwitchKey && twitchKeys.some(el => el === answer)) {
+          result.tryCount += 1;
+          result.correctly = true;
+          result.keys += 1;
+          User.updateOne({ vkId }, { $inc: { keys: 1, tryKeyCount: 1 } }).then(() => null);
+        } else {
+          result.tryCount += 1;
+          User.updateOne({ vkId }, { $inc: { tryKeyCount: 1 } }).then(() => null);
         }
       }
     } else result.error = true;

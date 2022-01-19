@@ -60,6 +60,16 @@ const userSchema = new mongoose.Schema({
     default: 0,
     require: true,
   },
+  answerTwitch: {
+    type: [String],
+    required: true,
+    default: [],
+  },
+  tvKeyAnswered: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model('user', userSchema);
