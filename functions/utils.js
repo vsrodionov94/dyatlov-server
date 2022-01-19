@@ -19,6 +19,7 @@ const updateUserDay = (vkId, currentDay) => {
       tryUserAnswerCount: 0,
       tryUserSendCount: 0,
       inviteCount: 0,
+      tvKeyAnswered: false,
       lastDay: currentDay,
     },
   }).then(() => null);
