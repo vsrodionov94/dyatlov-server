@@ -19,7 +19,7 @@ module.exports = app => {
 
     const user = await User.findOne({ vkId }).then(data => data);
     const currentDay = getCurrentDay();
-    if (!checkEventTime()) res.json({});
+    if (!checkEventTime()) return res.json({});
 
     if (user) {
       result.tutorial = user.tutorial;
@@ -35,6 +35,6 @@ module.exports = app => {
     }
 
     Statistics.incOpenedCount();
-    res.json(result);
+    return res.json(result);
   });
 };

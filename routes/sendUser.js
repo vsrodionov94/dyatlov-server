@@ -30,7 +30,7 @@ const getRandomUser = app => {
       else result.tryCount = user.tryUserSendCount;
 
       if (result.tryCount < MAX_ACTIONS_COUNT) {
-        const foreignUser = await getForeignUser();
+        const foreignUser = await getForeignUser(vkId);
         if (foreignUser) {
           const userData = await getUserInfo(foreignUser.vkId)
             .then(response => {
