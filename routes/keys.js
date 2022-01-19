@@ -54,7 +54,7 @@ const tryAnswerKey = app => {
       else result.tryCount = user.tryKeyCount;
       const dailyKey = keys[currentDay];
       const checkTwitchKey = user.answerTwitch.some(el => el === answer);
-      if (result.tryCount < MAX_ACTIONS_COUNT) {
+      if (result.tryCount < MAX_ACTIONS_COUNT && answer !== '') {
         if (!user.tvKeyAnswered && dailyKey === answer) {
           result.tryCount += 1;
           result.correctly = true;
