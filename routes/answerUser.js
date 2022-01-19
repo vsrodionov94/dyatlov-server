@@ -2,11 +2,12 @@ const {
   getCurrentDay,
   updateUserDay,
   getUserInfo,
-  randomInt,
   parseUserData,
   incUserArtefacts,
   incUserArtefactsAndTryCount,
 } = require('../functions/utils');
+const { MAX_ACTIONS_COUNT } = require('../data/constants');
+
 const User = require('../models/user');
 
 const { INC_HELPED, INC_INTERFERE } = require('../data/constants');
@@ -28,17 +29,18 @@ const getUserForAnswer = app => {
       if (currentDay !== user.lastDay) updateUserDay(vkId, currentDay);
       else result.tryCount = user.tryUserAnswerCount;
 
-      const { usersForAnswer } = user;
-      if (usersForAnswer.length > 0) {
-        const randomIndex = randomInt(0, usersForAnswer.length - 1);
-        const userData = await getUserInfo(usersForAnswer[randomIndex].id)
-          .then(response => {
-            if (response.data.response[0]) {
-              return parseUserData(response.data.response[0]);
-            }
-            return null;
-          });
-        result.user = userData;
+      if (result.tryCount < MAX_ACTIONS_COUNT) {
+        const { usersForAnswer } = user;
+        if (usersForAnswer.length > 0) {
+          const userData = await getUserInfo(usersForAnswer[0].id)
+            .then(response => {
+              if (response.data.response[0]) {
+                return parseUserData(response.data.response[0]);
+              }
+              return null;
+            });
+          result.user = userData;
+        }
       }
     } else result.error = true;
 
