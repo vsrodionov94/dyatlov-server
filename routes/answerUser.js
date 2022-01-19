@@ -30,9 +30,14 @@ const getUserForAnswer = app => {
 
       const { usersForAnswer } = user;
       if (usersForAnswer.length > 0) {
-        const randomIndex = randomInt(0, usersForAnswer.length);
+        const randomIndex = randomInt(0, usersForAnswer.length - 1);
         const userData = await getUserInfo(usersForAnswer[randomIndex].id)
-          .then(response => parseUserData(response.data.response[0]));
+          .then(response => {
+            if (response.data.response[0]) {
+              return parseUserData(response.data.response[0]);
+            }
+            return null;
+          });
         result.user = userData;
       }
     } else result.error = true;

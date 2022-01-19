@@ -19,7 +19,7 @@ const updateUserDay = (vkId, currentDay) => {
       tryUserAnswerCount: 0,
       tryUserSendCount: 0,
       inviteCount: 0,
-      currentDay: currentDay,
+      lastDay: currentDay,
     },
   }).then(() => null);
 };
@@ -67,20 +67,23 @@ const getUserInfo = id => {
 };
 
 const parseUserData = data => {
+  if (!data) return null;
   const {
     id,
     first_name: firstName,
     last_name: lastName,
     sex,
     bdate,
+    photo_200: photo,
   } = data;
   const hasAge = bdate && bdate.split('.')[2];
   const calculatedAge = hasAge ? new Date().getFullYear() - Number(bdate.split('.')[2]) : '-';
   return {
     id: id,
-    name: `${firstName} ${lastName}`,
-    sex: sex === 1 ? 'женский' : 'мужской',
-    age: String(calculatedAge),
+    photo: photo,
+    name: `${firstName}\n${lastName}`,
+    sex: `пол: ${sex === 1 ? 'женский' : 'мужской'}`,
+    age: `возраст: ${calculatedAge}`,
   };
 };
 
