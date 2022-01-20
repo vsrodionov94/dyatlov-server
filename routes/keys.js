@@ -75,6 +75,7 @@ const tryAnswerKey = app => {
               $set: { answerTwitch: user.answerTwitch.concat(answer) },
             },
           ).then(() => null);
+          Statistics.incKeysCount();
         } else {
           result.tryCount += 1;
           User.updateOne({ vkId }, { $inc: { tryKeyCount: 1 } }).then(() => null);
