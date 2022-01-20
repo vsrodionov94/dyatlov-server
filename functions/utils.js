@@ -25,8 +25,8 @@ const updateUserDay = (vkId, currentDay) => {
   }).then(() => null);
 };
 
-const checkRefAndUpdate = vkId => {
-  const user = User.findOne({ vkId }).then(found => found);
+const checkRefAndUpdate = async vkId => {
+  const user = await User.findOne({ vkId }).then(found => found);
   console.log(user.vkId, 'uservkid');
   if (user) {
     const currentDay = getCurrentDay();
