@@ -3,8 +3,8 @@ const {
   updateUserDay,
   getUserInfo,
   parseUserData,
-  incUserArtefacts,
-  incUserArtefactsAndTryCount,
+  incUserArtifacts,
+  incUserArtifactsAndTryCount,
 } = require('../functions/utils');
 const { MAX_ACTIONS_COUNT } = require('../data/constants');
 
@@ -69,18 +69,18 @@ const tryAnswerUser = app => {
       const foreignUser = usersForAnswer.find(el => el.id === Number(foreignId));
       if (foreignUser) {
         if (foreignUser.helped) {
-          incUserArtefacts(foreignUser.id, INC_HELPED);
+          incUserArtifacts(foreignUser.id, INC_HELPED);
           if (helped) {
-            incUserArtefactsAndTryCount(vkId, INC_HELPED);
+            incUserArtifactsAndTryCount(vkId, INC_HELPED);
             result.artifacts += INC_HELPED;
           }
         } else if (helped) {
-          incUserArtefacts(foreignUser.id, INC_INTERFERE);
-          incUserArtefactsAndTryCount(vkId, -INC_HELPED);
+          incUserArtifacts(foreignUser.id, INC_INTERFERE);
+          incUserArtifactsAndTryCount(vkId, -INC_HELPED);
           result.artifacts -= INC_HELPED;
         } else {
-          incUserArtefacts(foreignUser.id, -INC_HELPED);
-          incUserArtefactsAndTryCount(vkId, INC_INTERFERE);
+          incUserArtifacts(foreignUser.id, -INC_HELPED);
+          incUserArtifactsAndTryCount(vkId, INC_INTERFERE);
           result.artifacts += INC_INTERFERE;
         }
         result.tryCount += 1;
