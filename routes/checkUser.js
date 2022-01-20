@@ -16,7 +16,6 @@ module.exports = app => {
       artifacts: 0,
       inviteCount: 0,
     };
-    console.log(ref);
 
     const user = await User.findOne({ vkId }).then(data => data);
     const currentDay = getCurrentDay();
