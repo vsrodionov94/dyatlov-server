@@ -16,6 +16,7 @@ module.exports = app => {
       artifacts: 0,
       inviteCount: 0,
     };
+    console.log(ref);
 
     const user = await User.findOne({ vkId }).then(data => data);
     const currentDay = getCurrentDay();
@@ -30,7 +31,7 @@ module.exports = app => {
       }
     } else {
       User.create({ vkId: vkId }).then(() => null);
-      checkRefAndUpdate(ref);
+      checkRefAndUpdate(Number(ref));
       Statistics.incUsersCount();
     }
 

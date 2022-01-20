@@ -27,6 +27,7 @@ const updateUserDay = (vkId, currentDay) => {
 
 const checkRefAndUpdate = vkId => {
   const user = User.findOne({ vkId }).then(found => found);
+  console.log(user.vkId, 'uservkid');
   if (user) {
     const currentDay = getCurrentDay();
     if (user.lastDay < currentDay) {
