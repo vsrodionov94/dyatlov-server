@@ -27,7 +27,6 @@ const updateUserDay = (vkId, currentDay) => {
 
 const checkRefAndUpdate = async vkId => {
   const user = await User.findOne({ vkId }).then(found => found);
-  console.log(user.vkId, 'uservkid');
   if (user) {
     const currentDay = getCurrentDay();
     if (user.lastDay < currentDay) {
@@ -36,9 +35,9 @@ const checkRefAndUpdate = async vkId => {
     }
 
     if (user.inviteCount < MAX_ACTIONS_COUNT) {
-      User.updateOne(
+      await User.updateOne(
         { vkId },
-        { $inc: { inviteCount: 1, artefacts: INC_INVITE } },
+        { $inc: { inviteCount: 1, artifacts: INC_INVITE } },
       ).then(() => null);
     }
   }
@@ -89,11 +88,11 @@ const parseUserData = data => {
   };
 };
 
-const incUserArtefacts = (vkId, count) => {
+const incUserArtifacts = (vkId, count) => {
   User.updateOne({ vkId }, { $inc: { artifacts: count } }).then(() => null);
 };
 
-const incUserArtefactsAndTryCount = (vkId, count) => {
+const incUserArtifactsAndTryCount = (vkId, count) => {
   User.updateOne({ vkId }, { $inc: { artifacts: count, tryUserAnswerCount: 1 } }).then(() => null);
 };
 
@@ -105,6 +104,6 @@ module.exports = {
   checkEventTime,
   getUserInfo,
   parseUserData,
-  incUserArtefacts,
-  incUserArtefactsAndTryCount,
+  incUserArtifacts,
+  incUserArtifactsAndTryCount,
 };
