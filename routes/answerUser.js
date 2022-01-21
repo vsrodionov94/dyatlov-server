@@ -68,12 +68,9 @@ const tryAnswerUser = app => {
       const { usersForAnswer } = user;
       const foreignUser = usersForAnswer.find(el => el.id === Number(foreignId));
       if (foreignUser) {
-        if (foreignUser.helped) {
-          incUserArtifacts(foreignUser.id, INC_HELPED);
-          if (helped) {
-            incUserArtifactsAndTryCount(vkId, INC_HELPED);
-            result.artifacts += INC_HELPED;
-          }
+        if (foreignUser.helped && helped) {
+          incUserArtifactsAndTryCount(vkId, INC_HELPED);
+          result.artifacts += INC_HELPED;
         } else if (helped) {
           incUserArtifacts(foreignUser.id, INC_INTERFERE);
           incUserArtifactsAndTryCount(vkId, -INC_HELPED);

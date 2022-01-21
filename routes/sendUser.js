@@ -1,4 +1,4 @@
-const { MAX_ACTIONS_COUNT } = require('../data/constants');
+const { MAX_ACTIONS_COUNT, INC_HELPED } = require('../data/constants');
 const {
   getCurrentDay,
   updateUserDay,
@@ -66,8 +66,12 @@ const trySendUser = app => {
         const newUsers = foreignUser.usersForAnswer.concat({ id: vkId, helped: helped });
         User.updateOne({ vkId: foreignId }, { $set: { usersForAnswer: newUsers } })
           .then(() => null);
-
-        User.updateOne({ vkId }, { $inc: { tryUserSendCount: 1 } }).then(() => null);
+        if (helped) {
+          User.updateOne({ vkId }, { $inc: { tryUserSendCount: 1, artifacts: INC_HELPED } })
+            .then(() => null);
+        } else {
+          User.updateOne({ vkId }, { $inc: { tryUserSendCount: 1 } }).then(() => null);
+        }
         result.tryCount += 1;
       } else result.error = true;
     } else result.error = true;
