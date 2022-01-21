@@ -54,6 +54,7 @@ const trySendUser = app => {
     const result = {
       error: false,
       tryCount: 0,
+      artifacts: 0,
     };
 
     const user = await User.findOne({ vkId }).then(found => found);
@@ -61,6 +62,7 @@ const trySendUser = app => {
       const currentDay = getCurrentDay();
       if (currentDay !== user.lastDay) updateUserDay(vkId, currentDay);
       else result.tryCount = user.tryUserSendCount;
+      result.artifacts = user.artifacts;
       const foreignUser = await User.findOne({ vkId: foreignId }).then(found => found);
       if (foreignUser) {
         const newUsers = foreignUser.usersForAnswer.concat({ id: vkId, helped: helped });
@@ -69,6 +71,7 @@ const trySendUser = app => {
         if (helped) {
           User.updateOne({ vkId }, { $inc: { tryUserSendCount: 1, artifacts: INC_HELPED } })
             .then(() => null);
+          result.artifacts += INC_HELPED;
         } else {
           User.updateOne({ vkId }, { $inc: { tryUserSendCount: 1 } }).then(() => null);
         }
