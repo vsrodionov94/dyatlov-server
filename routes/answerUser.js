@@ -31,8 +31,8 @@ const getUserForAnswer = app => {
 
       if (result.tryCount < MAX_ACTIONS_COUNT) {
         const { usersForAnswer } = user;
-        if (usersForAnswer.length > 0) {
-          const userData = await getUserInfo(usersForAnswer[0].id)
+        if (usersForAnswer.length > 1) {
+          const userData = await getUserInfo(usersForAnswer[1].id)
             .then(response => {
               if (response.data.response[0]) {
                 return parseUserData(response.data.response[0]);
