@@ -23,10 +23,10 @@ module.exports = app => {
 
     if (user) {
       result.tutorial = user.tutorial;
+      Object.keys(result).forEach(key => { result[key] = user[key]; });
       if (user.lastDay < currentDay) {
         updateUserDay(vkId, currentDay);
-      } else {
-        Object.keys(result).forEach(key => { result[key] = user[key]; });
+        result.inviteCount = 0;
       }
     } else {
       User.create({ vkId: vkId }).then(() => null);
