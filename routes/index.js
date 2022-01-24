@@ -5,6 +5,7 @@ const { checkKey, tryAnswerKey } = require('./keys');
 const { getUserForAnswer, tryAnswerUser } = require('./answerUser');
 const { getRandomUser, trySendUser } = require('./sendUser');
 const doneTutorial = require('./doneTutorial');
+const getUserInfo = require('./getUserInfo');
 
 module.exports = app => {
   checkUser(app);
@@ -18,4 +19,5 @@ module.exports = app => {
   getRandomUser(app);
   trySendUser(app);
   doneTutorial(app);
+  getUserInfo(app);
 };
