@@ -63,20 +63,22 @@ const trySendUser = app => {
       if (currentDay !== user.lastDay) updateUserDay(vkId, currentDay);
       else result.tryCount = user.tryUserSendCount;
       result.artifacts = user.artifacts;
-      const foreignUser = await User.findOne({ vkId: foreignId }).then(found => found);
-      if (foreignUser) {
-        const newUsers = foreignUser.usersForAnswer.concat({ id: vkId, helped: helped });
-        User.updateOne({ vkId: foreignId }, { $set: { usersForAnswer: newUsers } })
-          .then(() => null);
-        if (helped) {
-          User.updateOne({ vkId }, { $inc: { tryUserSendCount: 1, artifacts: INC_HELPED } })
+      if (result.tryCount < MAX_ACTIONS_COUNT) {
+        const foreignUser = await User.findOne({ vkId: foreignId }).then(found => found);
+        if (foreignUser) {
+          const newUsers = foreignUser.usersForAnswer.concat({ id: vkId, helped: helped });
+          User.updateOne({ vkId: foreignId }, { $set: { usersForAnswer: newUsers } })
             .then(() => null);
-          result.artifacts += INC_HELPED;
-        } else {
-          User.updateOne({ vkId }, { $inc: { tryUserSendCount: 1 } }).then(() => null);
-        }
-        result.tryCount += 1;
-      } else result.error = true;
+          if (helped) {
+            User.updateOne({ vkId }, { $inc: { tryUserSendCount: 1, artifacts: INC_HELPED } })
+              .then(() => null);
+            result.artifacts += INC_HELPED;
+          } else {
+            User.updateOne({ vkId }, { $inc: { tryUserSendCount: 1 } }).then(() => null);
+          }
+          result.tryCount += 1;
+        } else result.error = true;
+      }
     } else result.error = true;
 
     res.json(result);

@@ -65,25 +65,27 @@ const tryAnswerUser = app => {
       if (currentDay !== user.lastDay) updateUserDay(vkId, currentDay);
       else result.tryCount = user.tryUserAnswerCount;
       result.artifacts = user.artifacts;
-      const { usersForAnswer } = user;
-      const foreignUser = usersForAnswer.find(el => el.id === Number(foreignId));
-      if (foreignUser) {
-        if (foreignUser.helped && helped) {
-          incUserArtifactsAndTryCount(vkId, INC_HELPED);
-          result.artifacts += INC_HELPED;
-        } else if (helped) {
-          incUserArtifacts(foreignUser.id, INC_INTERFERE);
-          incUserArtifactsAndTryCount(vkId, -INC_HELPED);
-          result.artifacts -= INC_HELPED;
-        } else {
-          incUserArtifacts(foreignUser.id, -INC_HELPED);
-          incUserArtifactsAndTryCount(vkId, INC_INTERFERE);
-          result.artifacts += INC_INTERFERE;
-        }
-        result.tryCount += 1;
-        const newUsers = usersForAnswer.filter(el => el._id !== foreignUser._id);
-        User.updateOne({ vkId }, { $set: { usersForAnswer: newUsers } }).then(() => null);
-      } else result.error = true;
+      if (result.tryCount < MAX_ACTIONS_COUNT) {
+        const { usersForAnswer } = user;
+        const foreignUser = usersForAnswer.find(el => el.id === Number(foreignId));
+        if (foreignUser) {
+          if (foreignUser.helped && helped) {
+            incUserArtifactsAndTryCount(vkId, INC_HELPED);
+            result.artifacts += INC_HELPED;
+          } else if (helped) {
+            incUserArtifacts(foreignUser.id, INC_INTERFERE);
+            incUserArtifactsAndTryCount(vkId, -INC_HELPED);
+            result.artifacts -= INC_HELPED;
+          } else {
+            incUserArtifacts(foreignUser.id, -INC_HELPED);
+            incUserArtifactsAndTryCount(vkId, INC_INTERFERE);
+            result.artifacts += INC_INTERFERE;
+          }
+          result.tryCount += 1;
+          const newUsers = usersForAnswer.filter(el => el._id !== foreignUser._id);
+          User.updateOne({ vkId }, { $set: { usersForAnswer: newUsers } }).then(() => null);
+        } else result.error = true;
+      }
     } else result.error = true;
 
     res.json(result);
