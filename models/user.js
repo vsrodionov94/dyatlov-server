@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema({
   lastDay: {
     type: Number,
     required: true,
-    default: 1,
+    default: 0,
   },
   usersForAnswer: {
     type: [{

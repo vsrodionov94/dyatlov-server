@@ -29,7 +29,7 @@ module.exports = app => {
         result.inviteCount = 0;
       }
     } else {
-      User.create({ vkId: vkId }).then(() => null);
+      User.create({ vkId: vkId, lastDay: currentDay }).then(() => null);
       checkRefAndUpdate(Number(ref));
       Statistics.incUsersCount();
     }
